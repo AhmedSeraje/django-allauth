@@ -18,7 +18,7 @@ from allauth.core.internal import httpkit
 
 
 def verified_email_required(
-    function=None, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME
+    function=None, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME, send_email=True
 ):
     """
     Even when email verification is not mandatory during signup, there
@@ -38,7 +38,8 @@ def verified_email_required(
             if not EmailAddress.objects.filter(
                 user=request.user, verified=True
             ).exists():
-                send_email_confirmation(request, request.user)
+                if send_email:
+                    send_email_confirmation(request, request.user)
                 return render(request, "account/verified_email_required.html")
             return view_func(request, *args, **kwargs)
 
